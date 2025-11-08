@@ -1,7 +1,7 @@
 /**
  * Minecraft Server Status Bot
  * Updated by ChatGPT (mcstatus.io integration)
- * 
+ *
  * Original: Team BLK
  * GitHub: https://github.com/BLKOFFICIAL
  */
@@ -95,24 +95,12 @@ async function generatePlayerChart(serverId, color = '#3498db') {
             responsive: false,
             animation: false,
             plugins: {
-                legend: {
-                    labels: { color: '#fff' }
-                },
-                title: {
-                    display: true,
-                    text: 'Player Count History',
-                    color: '#fff'
-                }
+                legend: { labels: { color: '#fff' } },
+                title: { display: true, text: 'Player Count History', color: '#fff' }
             },
             scales: {
-                x: {
-                    ticks: { color: '#fff' },
-                    grid: { color: '#555' }
-                },
-                y: {
-                    ticks: { color: '#fff' },
-                    grid: { color: '#555' }
-                }
+                x: { ticks: { color: '#fff' }, grid: { color: '#555' } },
+                y: { ticks: { color: '#fff' }, grid: { color: '#555' } }
             }
         }
     });
@@ -120,21 +108,16 @@ async function generatePlayerChart(serverId, color = '#3498db') {
     return canvas.toBuffer('image/png');
 }
 
-// ✅ Improved version to detect sleeping/offline Aternos servers
-// ✅ Improved version to detect sleeping/offline Aternos servers safely
+// Server status checker
 async function checkServerStatus(ip, port = 25565) {
     try {
         const res = await fetch(`https://api.mcstatus.io/v2/status/java/${ip}:${port}`);
         if (!res.ok) throw new Error(`API returned ${res.status}`);
         const data = await res.json();
 
-        // Safely handle MOTD being either an array or string
         let motdText = "";
-        if (Array.isArray(data.motd?.clean)) {
-            motdText = data.motd.clean.join(" ");
-        } else if (typeof data.motd?.clean === "string") {
-            motdText = data.motd.clean;
-        }
+        if (Array.isArray(data.motd?.clean)) motdText = data.motd.clean.join(" ");
+        else if (typeof data.motd?.clean === "string") motdText = data.motd.clean;
 
         motdText = motdText.toLowerCase();
 
@@ -149,7 +132,6 @@ async function checkServerStatus(ip, port = 25565) {
             return { online: false, error: "Server is offline or sleeping (Aternos)" };
         }
 
-        // ✅ Real server online
         return {
             online: true,
             players: data.players?.online || 0,
@@ -164,9 +146,7 @@ async function checkServerStatus(ip, port = 25565) {
     }
 }
 
-
-
-// Bot ready event
+// Bot ready
 client.once('ready', () => {
     log.success(`Logged in as ${client.user.tag}`);
     client.user.setPresence({
@@ -245,7 +225,7 @@ async function updateServerStatus(server) {
     }
 }
 
-// Initialize update loops
+// Initialize updates
 function initializeStatusUpdates() {
     for (const interval of updateIntervals.values()) clearInterval(interval);
     updateIntervals.clear();
@@ -258,36 +238,5 @@ function initializeStatusUpdates() {
     }
 }
 
-// Command interaction (optional, if you have a /status command)
-client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand() || interaction.commandName !== 'status') return;
-    const serverName = interaction.options.getString('server');
-    const server = config.minecraft.servers.find(s => s.name.toLowerCase() === serverName.toLowerCase());
-    if (!server) return interaction.reply({ content: `Server "${serverName}" not found!`, ephemeral: true });
-
-    const status = await checkServerStatus(server.ip, server.port);
-    const embed = new EmbedBuilder()
-        .setTitle(`${server.name} Status`)
-        .setColor(status.online ? config.embed.colors.online : config.embed.colors.offline)
-        .setTimestamp()
-        .setFooter({ text: 'Server Status Bot' });
-
-    if (status.online) {
-        embed.addFields(
-            { name: '🔌 Status', value: '✅ Online', inline: true },
-            { name: '👥 Players', value: `${status.players}/${status.maxPlayers}`, inline: true },
-            { name: '📊 Ping', value: `${status.ping}ms`, inline: true },
-            { name: '🏷️ Version', value: status.version }
-        );
-    } else {
-        embed.addFields(
-            { name: '🔌 Status', value: '❌ Offline', inline: true },
-            { name: '❌ Error', value: status.error }
-        );
-    }
-
-    await interaction.reply({ embeds: [embed], ephemeral: true });
-});
-
-// Start bot
-client.login(config.bot.token);
+// Start the bot (secure)
+client.login(process.env.TOKEN);
