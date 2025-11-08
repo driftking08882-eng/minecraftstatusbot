@@ -1,2 +1,1 @@
-# minecraftstatusbot
-The minecraft status bot!
+# a very cool bot 
