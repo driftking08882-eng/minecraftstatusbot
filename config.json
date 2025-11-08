@@ -1,0 +1,42 @@
+{
+  "bot": {
+    "token": "MTQzNjY3MjUyNTI4NjM3OTU1Mg.GUcf1n.EfAX3UHzqCp2vURjtBmfwYPkbb1IcXWEDPjnMw",
+    "clientId": "1436672525286379552",
+    "presence": {
+      "status": "online",
+      "activities": [
+        {
+          "name": "One Block Server Status",
+          "type": "WATCHING"
+        }
+      ]
+    }
+  },
+  "minecraft": {
+    "servers": [
+      {
+        "name": "One Block Community",
+        "ip": "oneblock543.aternos.me",
+        "port": 25565,
+        "channelId": "1436672819772784722",
+        "updateInterval": 30000,
+        "display": {
+          "type": "chart",
+          "chart": {
+            "enabled": true,
+            "historyHours": 24,
+            "color": "#3498db"
+          },
+          "showNextUpdate": true
+        }
+      }
+    ]
+  },
+  "embed": {
+    "colors": {
+      "online": "#00ff00",
+      "offline": "#ff0000"
+    },
+    "title": "📦 One Block Server Status"
+  }
+}
